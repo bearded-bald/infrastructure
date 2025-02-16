@@ -17,3 +17,19 @@ To stop the service, just execute the command:
 ```shell
 docker compose -f postgres.yml down postgresql
 ```
+
+### MINIO
+
+Create a `minio.secrets.env` file under `./env` directory and set the `MINIO_ROOT_PASSWORD` environment variable.
+
+Then execute the following `compose` command to run the minio service:
+
+```shell
+docker compose -f minio.yml up -d minio
+```
+
+To stop the service, just execute the command:
+
+```shell
+docker compose -f minio.yml down minio
+```

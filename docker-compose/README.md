@@ -9,13 +9,13 @@ Create a `postgres.secrets.env` file under `./env` directory and set the `POSTGR
 Then execute the following `compose` command to run the postgres service:
 
 ```shell
-docker compose -f postgres.yml up -d postgresql
+docker compose -f compose.yml up -d postgres
 ```
 
 To stop the service, just execute the command:
 
 ```shell
-docker compose -f postgres.yml down postgresql
+docker compose -f compose.yml down postgres
 ```
 
 ### MINIO
@@ -25,13 +25,13 @@ Create a `minio.secrets.env` file under `./env` directory and set the `MINIO_ROO
 Then execute the following `compose` command to run the minio service:
 
 ```shell
-docker compose -f minio.yml up -d minio
+docker compose -f compose.yml up -d minio
 ```
 
 To stop the service, just execute the command:
 
 ```shell
-docker compose -f minio.yml down minio
+docker compose -f compose.yml down minio
 ```
 
 ### Pulsar (standalone)
@@ -39,11 +39,11 @@ docker compose -f minio.yml down minio
 Execute the `compose` command to start Apache Pulsar in a standalone mode:
 
 ```shell
-docker compose -f pulsar.yml up -d pulsar
+docker compose -f compose.yml up -d pulsar
 ```
 
 To stop the service, just execute the command:
 
 ```shell
-docker compose -f pulsar.yml down pulsar
+docker compose -f compose.yml down pulsar
 ```

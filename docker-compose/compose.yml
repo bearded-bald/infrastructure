@@ -1,0 +1,105 @@
+---
+services:
+  # POSTGRESQL
+  postgres:
+    image: postgres:17-alpine
+    container_name: postgres
+    hostname: postgres
+    restart: always
+    shm_size: 128mb
+    ports:
+      - "5432:5432"
+    env_file:
+      - ./env/postgres.env
+      - ./env/postgres.secrets.env
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - pg_net
+    command:
+      - postgres
+      - -c
+      - wal_level=logical
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s
+  # MINIO
+  minio:
+    image: quay.io/minio/minio:RELEASE.2025-02-07T23-21-09Z
+    container_name: minio
+    hostname: minio
+    restart: always
+    shm_size: 128mb
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    env_file:
+      - ./env/minio.env
+      - ./env/minio.secrets.env
+    volumes:
+      - minio_data:/data
+    networks:
+      - minio_net
+    command:
+      - server
+      - /data
+      - --console-address
+      - ":9001"
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "http://127.0.0.1:9000/minio/health/live" ]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 60s
+  # PULSAR
+  pulsar:
+    image: apachepulsar/pulsar:4.0.2
+    container_name: pulsar
+    hostname: pulsar
+    restart: on-failure
+    ports:
+      - "6650:6650"
+      - "8080:8080"
+    env_file:
+      - ./env/pulsar.env
+    volumes:
+      - pulsar_data:/pulsar/data
+      - pulsar_conf:/pulsar/conf
+    networks:
+      - pulsar_net
+    command: bash -c "bin/pulsar standalone"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://pulsar:8080/metrics/" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+
+
+volumes:
+  # POSTGRESQL
+  pg_data:
+    name: postgres-data
+  # MINIO
+  minio_data:
+    name: minio-data
+  # PULSAR
+  pulsar_data:
+    name: pulsar-data
+  pulsar_conf:
+    name: pulsar-conf
+
+
+networks:
+  # POSTGRESQL
+  pg_net:
+    name: postgres-network
+  # MINIO
+  minio_net:
+    name: minio-network
+  # PULSAR
+  pulsar_net:
+    name: pulsar-network

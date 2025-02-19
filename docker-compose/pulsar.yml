@@ -1,0 +1,36 @@
+---
+services:
+  pulsar:
+    image: apachepulsar/pulsar:4.0.2
+    container_name: pulsar
+    hostname: pulsar
+    restart: on-failure
+    ports:
+      - "6650:6650"
+      - "8080:8080"
+    env_file:
+      - ./env/pulsar.env
+    volumes:
+      - pulsar_data:/pulsar/data
+      - pulsar_conf:/pulsar/conf
+    networks:
+      - pulsar_net
+    command: bash -c "bin/pulsar standalone"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://pulsar:8080/metrics/" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+
+
+volumes:
+  pulsar_data:
+    name: pulsar-data
+  pulsar_conf:
+    name: pulsar-conf
+
+
+networks:
+  pulsar_net:
+    name: pulsar-network

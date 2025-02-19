@@ -33,3 +33,17 @@ To stop the service, just execute the command:
 ```shell
 docker compose -f minio.yml down minio
 ```
+
+### Pulsar (standalone)
+
+Execute the `compose` command to start Apache Pulsar in a standalone mode:
+
+```shell
+docker compose -f pulsar.yml up -d pulsar
+```
+
+To stop the service, just execute the command:
+
+```shell
+docker compose -f pulsar.yml down pulsar
+```
